@@ -1,0 +1,64 @@
+import java.util.*;
+
+public class BoundedBFS {
+
+    static Set<String> bfs(
+            Map<String,List<String>> adj,
+            String source,
+            int maxDepth){
+
+        Set<String> visited = new HashSet<>();
+        Set<String> reached = new HashSet<>();
+
+        Queue<Object[]> q = new LinkedList<>();
+
+        q.offer(new Object[]{source,0});
+        visited.add(source);
+
+        while(!q.isEmpty()){
+
+            Object[] cur = q.poll();
+
+            String u = (String)cur[0];
+            int depth = (Integer)cur[1];
+
+            if(depth == maxDepth)
+                continue;
+
+            for(String v :
+                    adj.getOrDefault(u,new ArrayList<>())){
+
+                if(!visited.contains(v)){
+
+                    visited.add(v);
+                    reached.add(v);
+
+                    q.offer(
+                            new Object[]{
+                                    v,
+                                    depth+1
+                            });
+                }
+            }
+        }
+
+        return reached;
+    }
+
+    public static void main(String[] args){
+
+        Map<String,List<String>> g =
+                new HashMap<>();
+
+        g.put("A",Arrays.asList("B","C"));
+        g.put("B",Arrays.asList("D","E"));
+        g.put("C",Arrays.asList("E","F"));
+        g.put("D",Arrays.asList("G"));
+        g.put("E",Arrays.asList("G","H"));
+        g.put("F",Arrays.asList("H","I"));
+
+        System.out.println(
+                bfs(g,"A",3)
+        );
+    }
+}
